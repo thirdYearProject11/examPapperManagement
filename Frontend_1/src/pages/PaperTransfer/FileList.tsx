@@ -215,12 +215,21 @@ const FileList: React.FC = () => {
                       </>
                     )}
                     {viewType === 'receiver' && (
+                      <>
                       <Link
                         to={`/paper/moderate/${file.id}/${moderatorId}`}
                         className="ml-4 text-green-600 hover:text-opacity-80"
                       >
                         Moderate
                       </Link>
+                      <Link
+                      to={`/paper/feedback/${file.id}/${moderatorId}`}
+                      className="ml-4 text-green-600 hover:text-opacity-80"
+                    >
+                      Feedback
+                    </Link>
+                    </>
+                      
                     )}
                   </td>
                 </tr>

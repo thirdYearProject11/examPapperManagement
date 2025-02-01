@@ -2,13 +2,19 @@ package com.example.examManagementBackend.paperWorkflows.service;
 
 import com.example.examManagementBackend.paperWorkflows.dto.ExaminationCoursesDTO;
 import com.example.examManagementBackend.paperWorkflows.dto.ExaminationDTO;
+import com.example.examManagementBackend.paperWorkflows.entity.CoursesEntity;
+import com.example.examManagementBackend.paperWorkflows.entity.Enums.PaperType;
 import com.example.examManagementBackend.paperWorkflows.entity.ExaminationEntity;
 import com.example.examManagementBackend.paperWorkflows.entity.DegreeProgramsEntity;
+import com.example.examManagementBackend.paperWorkflows.entity.RoleAssignmentEntity;
 import com.example.examManagementBackend.paperWorkflows.repository.ExaminationRepository;
 import com.example.examManagementBackend.paperWorkflows.repository.DegreeProgramRepo;
+import com.example.examManagementBackend.paperWorkflows.repository.RoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +29,9 @@ public class ExaminationService {
 
     @Autowired
     private DegreeProgramRepo degreeProgramsRepository;
+
+    @Autowired
+    private RoleAssignmentRepository roleAssignmentRepository;
 
 
     public ExaminationDTO createExamination(ExaminationDTO examinationDTO) {
@@ -94,21 +103,74 @@ public class ExaminationService {
         ExaminationEntity examination = examinationRepository.findById(examinationId)
                 .orElseThrow(() -> new RuntimeException("Examination not found with id: " + examinationId));
 
+        DegreeProgramsEntity degreeProgram = examination.getDegreeProgramsEntity();
+        if (degreeProgram == null) {
+            throw new RuntimeException("Degree program not found for examination id: " + examinationId);
+        }
+
+        List<ExaminationCoursesDTO.ActiveCourseDTO> activeCourses = degreeProgram.getCoursesEntities().stream()
+                .filter(course -> isCourseActiveAndMatchesExamination(course, examination))
+                .flatMap(course -> mapCourseToActiveCourseDTOs(course, examination).stream())
+                .collect(Collectors.toList());
+
         return ExaminationCoursesDTO.builder()
                 .id(examination.getId())
-                .degreeId(examination.getDegreeProgramsEntity().getId())
-                .degreeName(examination.getDegreeProgramsEntity().getDegreeName())
-                .activeCourses(
-                        examination.getDegreeProgramsEntity().getCoursesEntities().stream()
-                                .filter(course -> course.getLevel().equals(Integer.parseInt(examination.getLevel())) &&
-                                        course.getSemester().equals(examination.getSemester()) &&
-                                        course.getIsActive())
-                                .map(course -> new ExaminationCoursesDTO.ActiveCourseDTO(
-                                        course.getId(), course.getCode(), course.getName(), course.getCourseType()
-                                ))
-                                .collect(Collectors.toList())
-                )
+                .degreeId(degreeProgram.getId())
+                .degreeName(degreeProgram.getDegreeName())
+                .activeCourses(activeCourses)
                 .build();
     }
+
+    private boolean isCourseActiveAndMatchesExamination(CoursesEntity course, ExaminationEntity examination) {
+        return course.getLevel().equals(Integer.parseInt(examination.getLevel())) &&
+                course.getSemester().equals(examination.getSemester()) &&
+                course.getIsActive();
+    }
+
+    private List<ExaminationCoursesDTO.ActiveCourseDTO> mapCourseToActiveCourseDTOs(CoursesEntity course, ExaminationEntity examination) {
+        if ("BOTH".equalsIgnoreCase(course.getCourseType().toString())) {
+            return handleBothCourseType(course, examination);
+        } else {
+            // For non-BOTH course types, include the course as is
+            return Collections.singletonList(new ExaminationCoursesDTO.ActiveCourseDTO(
+                    course.getId(), course.getCode(), course.getName(), course.getCourseType()
+            ));
+        }
+    }
+
+    private List<ExaminationCoursesDTO.ActiveCourseDTO> handleBothCourseType(CoursesEntity course, ExaminationEntity examination) {
+        boolean hasTheoryAssigned = roleAssignmentRepository.existsByCourseIdAndExaminationIdAndPaperType(
+                course.getId(), examination, PaperType.THEORY
+        );
+        boolean hasPracticalAssigned = roleAssignmentRepository.existsByCourseIdAndExaminationIdAndPaperType(
+                course.getId(), examination, PaperType.PRACTICAL
+        );
+
+        if (hasTheoryAssigned && hasPracticalAssigned) {
+            // Exclude the course entirely if both THEORY and PRACTICAL are assigned
+            return Collections.emptyList();
+        } else if (hasTheoryAssigned) {
+            // Only include PRACTICAL if THEORY is already assigned
+            return Collections.singletonList(new ExaminationCoursesDTO.ActiveCourseDTO(
+                    course.getId(), course.getCode(), course.getName(), CoursesEntity.CourseType.PRACTICAL
+            ));
+        } else if (hasPracticalAssigned) {
+            // Only include THEORY if PRACTICAL is already assigned
+            return Collections.singletonList(new ExaminationCoursesDTO.ActiveCourseDTO(
+                    course.getId(), course.getCode(), course.getName(), CoursesEntity.CourseType.THEORY
+            ));
+        } else {
+            // Include both THEORY and PRACTICAL if neither is assigned
+            return Arrays.asList(
+                    new ExaminationCoursesDTO.ActiveCourseDTO(
+                            course.getId(), course.getCode(), course.getName(), CoursesEntity.CourseType.THEORY
+                    ),
+                    new ExaminationCoursesDTO.ActiveCourseDTO(
+                            course.getId(), course.getCode(), course.getName(), CoursesEntity.CourseType.PRACTICAL
+                    )
+            );
+        }
+    }
+
 
 }

@@ -53,7 +53,7 @@ public class RoleAssignmentService {
                 .orElseThrow(() -> new RuntimeException("Examination not found with ID: " + createRoleAssignmentDTO.getExaminationId()));
 
         // Check for duplicates before inserting
-        boolean exists = roleAssignmentRepository.existsByCourseAndRoleAndExaminationId(course, role, examination);
+        boolean exists = roleAssignmentRepository.existsByCourseAndRoleAndExaminationIdAndPaperType(course, role, examination,createRoleAssignmentDTO.getPaperType());
         if (exists) {
             throw new RuntimeException("Role assignment already exists for the specified course, role, and Examination.");
         }
@@ -98,9 +98,9 @@ public class RoleAssignmentService {
                     .orElseThrow(() -> new RuntimeException("Examination not found with ID: " + createRoleAssignmentDTO.getExaminationId()));
 
             // Check for duplicates before inserting
-            boolean exists = roleAssignmentRepository.existsByCourseAndRoleAndExaminationId(course, role, examination);
+            boolean exists = roleAssignmentRepository.existsByCourseAndRoleAndExaminationIdAndPaperType(course, role, examination, createRoleAssignmentDTO.getPaperType());
             if (exists) {
-                throw new RuntimeException("Role assignment already exists for the specified course, role, and Examination.");
+                throw new RuntimeException("Role assignment already exists for the specified course,paper type, role, and Examination.");
             }
             // Create and save role assignment
             RoleAssignmentEntity roleAssignment = new RoleAssignmentEntity();
