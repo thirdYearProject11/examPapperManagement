@@ -228,7 +228,7 @@ export default function ModeratePaper() {
 
   return (
     <div>
-      <Breadcrumb pageName='Paper Moderation' />
+      <Breadcrumb pageName="Paper Moderation" />
       <div className="flex h-screen ">
         <div className="flex-1 bg-white rounded shadow-lg overflow-hidden">
           {pdfUrl ? (
@@ -258,7 +258,7 @@ export default function ModeratePaper() {
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
                 Kindly complete the
                 <Link
-                  to={`/paper/feedback/${paperId}/${moderatorId}`}
+                  to={`/paper/feedback`}
                   className="underline flex items-center"
                 >
                   Evaluation Form for Moderation of Examination Paper

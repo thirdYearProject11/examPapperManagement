@@ -129,7 +129,7 @@ const ArchivedPapers = () => {
 
   // Date formatting function
   const formatDate = (dateString: string) => {
-    if (!dateString) return "No Date";
+    if (!dateString) return 'No Date';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -150,7 +150,7 @@ const ArchivedPapers = () => {
   };
 
   return (
-    <div className="mx-auto max-w-full">
+    <div className="container mx-auto px-4">
       <Breadcrumb pageName="Archived Papers" />
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark max-w-full mx-auto text-sm mb-4">

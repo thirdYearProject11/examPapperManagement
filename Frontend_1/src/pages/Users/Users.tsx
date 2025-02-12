@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import SelectBox from '../../components/SelectBox'; // Import SelectBox component for filtering roles
 import useHasPermission from '../../hooks/useHasPermission';
 import useApi from '../../api/api';
+import Loader from '../../common/Loader';
 
 type User = {
   id: number;
@@ -34,7 +35,7 @@ const Users: React.FC = () => {
   const hasCreatePermission = useHasPermission('CREATE_USER');
   const hasEditPermission = useHasPermission('UPDATE_USER');
   const hasChangePermission = useHasPermission('CHANGE_USER_STATUS');
-  const { fetchUsers, deleteUser,updateUserStatus } = useApi();
+  const { fetchUsers, deleteUser, updateUserStatus } = useApi();
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -124,14 +125,18 @@ const Users: React.FC = () => {
   };
 
   if (loading)
-    return <div className="text-center mt-8 text-gray-500">Loading...</div>;
+    return (
+      <div className="text-center mt-8 text-gray-500">
+        <Loader />
+      </div>
+    );
   if (error)
     return <div className="text-center mt-8 text-red-500">{error}</div>;
 
   return (
-    <div className="mx-auto max-w-270 text-sm">
+    <div className="mx-auto container px-4">
       <Breadcrumb pageName="Users" />
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-6.5">
+      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-6.5 text-sm">
         <div className="mb-6 flex justify-between items-center flex-wrap">
           <h3 className="font-medium text-black dark:text-white w-full sm:w-auto">
             Users List

@@ -239,117 +239,130 @@ const Feedback = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 w-full p-6 relative">
+    <div className="mx-auto max-w-270">
       <Breadcrumb pageName="Feedback" />
-      <h1 className="text-center font-bold text-title-lg">
-        Evaluation Form for Moderation of Examination Papers
-        <br /> Department of Computer Science - University of Ruhuna
-      </h1>
-      <form
-        className="bg-gray-100 dark:bg-gray-800 p-6 rounded shadow-md mx-4 md:mx-8 lg:mx-16 mt-6"
-        method="post"
-        onSubmit={hadleSubmit}
-      >
-        <div className="space-y-6">
-          {/* Degree Program */}
-          <div className="flex flex-col md:flex-row items-center">
-            <label
-              htmlFor="degreeProgram"
-              className="font-bold md:w-1/3 w-full mb-2 md:mb-0"
-            >
-              Degree Program
-            </label>
-            <select
-              id="degreeProgram"
-              name={selectedDegreeProgram}
-              value={selectedDegreeProgram}
-              className="w-full md:w-2/3 rounded border-[1.5px] border-stroke bg-gray py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-              onChange={handleDegreeName}
-            >
-              <option value="" disabled>
-                -- Select a degree --
-              </option>
-              {degreeName.map((degree) => (
-                <option key={degree.id} value={degree.name}>
-                  {degree.name}
+      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark max-w-270 mx-auto text-sm">
+        <div className="border-b border-stroke dark:border-strokedark py-6 px-8">
+          <header className="text-center">
+            <h4 className="text-lg font-medium text-gray-600 dark:text-gray-400">
+              University of Ruhuna
+            </h4>
+            <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Department of Computer Science
+            </h3>
+            <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300">
+              Evaluation Form for Moderation of Examination Papers
+            </h2>
+          </header>
+        </div>
+        <form
+          className="bg-gray-100 dark:bg-gray-800 p-6 rounded-sm shadow-md mx-4 md:mx-8 lg:mx-16 mt-6"
+          method="post"
+          onSubmit={hadleSubmit}
+        >
+          <div className="space-y-6">
+            {/* Degree Program */}
+            <div className="flex flex-col md:flex-row items-center">
+              <label
+                htmlFor="degreeProgram"
+                className="font-bold md:w-1/3 w-full mb-2 md:mb-0"
+              >
+                Degree Program
+              </label>
+              <select
+                id="degreeProgram"
+                name={selectedDegreeProgram}
+                value={selectedDegreeProgram}
+                className="w-full md:w-2/3 rounded border-[1.5px] border-stroke bg-gray py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                onChange={handleDegreeName}
+              >
+                <option value="" disabled>
+                  -- Select a degree --
                 </option>
-              ))}
-            </select>
-          </div>
+                {degreeName.map((degree) => (
+                  <option key={degree.id} value={degree.name}>
+                    {degree.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Examination */}
-          <div className="flex flex-col md:flex-row items-center">
-            <label
-              htmlFor="examination"
-              className="font-bold md:w-1/3 w-full mb-2 md:mb-0"
-            >
-              Enter Examination Name
-            </label>
-            <input
-              id="examination"
-              name="examination"
-              type="text"
-              className="w-full md:w-2/3 h-10 border-2 border-gray-300 p-2 rounded-md  dark:bg-gray-700 text-gray-900 dark:text-gray-300"
-              placeholder="Examination"
-              onChange={(event) => setExamination(event.target.value)}
-            />
-          </div>
+            {/* Examination */}
+            <div className="flex flex-col md:flex-row items-center">
+              <label
+                htmlFor="examination"
+                className="font-bold md:w-1/3 w-full mb-2 md:mb-0"
+              >
+                Enter Examination Name
+              </label>
+              <input
+                id="examination"
+                name="examination"
+                type="text"
+                className="w-full md:w-2/3 input-field"
+                placeholder="Examination"
+                onChange={(event) => setExamination(event.target.value)}
+              />
+            </div>
 
-          {/* Course Information */}
-          <div className="space-y-4">
-            <div className="font-bold">Course Information</div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {/* Course Code */}
-              <div className="flex flex-col">
-                <label htmlFor="code" className="font-bold mb-1">
-                  Course Code
-                </label>
-                <select
-                  id="code"
-                  name="courseCode"
-                  className="input-field"
-                  onChange={(event) => handleCourseCode(event, '')}
-                >
-                  {courseData.map((course) => (
-                    <option key={course.id} value={course.code}>
-                      {course.code}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Course Information */}
+            <div className="space-y-4">
+              <div className="font-bold">Course Information</div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Course Code */}
+                <div className="flex flex-col">
+                  <label htmlFor="code" className="font-bold mb-1">
+                    Course Code
+                  </label>
+                  <select
+                    id="code"
+                    name="courseCode"
+                    className="input-field"
+                    onChange={(event) => handleCourseCode(event, '')}
+                  >
+                    {courseData.map((course) => (
+                      <option key={course.id} value={course.code}>
+                        {course.code}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              {/* Course Title */}
-              <div className="flex flex-col">
-                <label htmlFor="title" className="font-bold mb-1">
-                  Course Title
-                </label>
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  value={selectedCourseName ? selectedCourseName : ''}
-                  disabled
-                  className="h-10 border-2 border-gray-300 p-2 rounded-md  dark:bg-gray-700 text-gray-900 dark:text-gray-300"
-                  placeholder={selectedCourseName}
-                />
+                {/* Course Title */}
+                <div className="flex flex-col">
+                  <label htmlFor="title" className="font-bold mb-1">
+                    Course Title
+                  </label>
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    value={selectedCourseName ? selectedCourseName : ''}
+                    disabled
+                    className="input-field"
+                    placeholder={selectedCourseName}
+                  />
+                </div>
               </div>
             </div>
+
+            {/* Child Components */}
+            <PaperFeedbackQuestionTable
+              getDataFromTable={handleQuestionsData}
+            />
+            <PaperFeedbackSignEndTable getModerateData={handleModerateData} />
           </div>
 
-          {/* Child Components */}
-          <PaperFeedbackQuestionTable getDataFromTable={handleQuestionsData} />
-          <PaperFeedbackSignEndTable getModerateData={handleModerateData} />
-        </div>
-
-        <div className="flex justify-center mt-6">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="btn-primary"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -60,8 +60,24 @@ public class ModerationService {
                     subSubQuestionRepository.save(subSubQuestion);
                 }
             }
+            // Auto approve paper if all main questions are approved
+            autoApprovePaperIfAllQuestionsApproved(question.getEncryptedPaper().getId());
         } else {
             throw new RuntimeException("Main question not found for moderation");
+        }
+    }
+
+    private void autoApprovePaperIfAllQuestionsApproved(Long paperId) {
+        EncryptedPaper paper = encryptedPaperRepository.findById(paperId)
+                .orElseThrow(() -> new RuntimeException("Paper not found"));
+
+        boolean allQuestionsApproved = questionRepository.findByEncryptedPaperId(paperId)
+                .stream()
+                .allMatch(q -> q.getStatus().toString().equals(ExamPaperStatus.APPROVED.toString()));
+
+        if (allQuestionsApproved) {
+            paper.setStatus(ExamPaperStatus.APPROVED);
+            encryptedPaperRepository.save(paper);
         }
     }
 

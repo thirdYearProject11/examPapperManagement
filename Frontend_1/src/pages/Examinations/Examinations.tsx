@@ -157,9 +157,9 @@ export default function Examinations() {
   };
 
   return (
-    <div className="mx-auto max-w-270">
+    <div className="container mx-auto px-4">
       <Breadcrumb pageName="Examinations" />
-      <div className="grid grid-cols-5 gap-8 text-sm">
+      <div className="grid grid-cols-5 gap-8 ">
         <div className="col-span-5 xl:col-span-3">
           <SuccessMessage message={successMessage} onClose={() => setSuccessMessage('')} />
           <ErrorMessage message={errorMessage} onClose={() => setErrorMessage('')} />

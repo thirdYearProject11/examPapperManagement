@@ -274,10 +274,7 @@ export default function ExaminationForm({
                 Cancel
               </button>
             )}
-            <button
-              type="submit"
-              className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
-            >
+            <button type="submit" className="btn-primary">
               {editId !== null ? 'Update Examination' : 'Add Examination'}
             </button>
           </div>

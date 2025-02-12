@@ -16,16 +16,20 @@ import java.util.stream.Collectors;
 public class QuestionService {
 
     private final EncryptedPaperRepository encryptedPaperRepository;
+
     private final QuestionStructureRepository questionStructureRepository;
+
     private final SubQuestionRepository subQuestionRepository;
+
     private final SubSubQuestionRepository subSubQuestionRepository;
+
     private final QuestionTemplateRepository questionTemplateRepository;
 
-    public QuestionService(EncryptedPaperRepository encryptedPaperRepository,QuestionStructureRepository questionStructureRepository,SubQuestionRepository subQuestionRepository,QuestionTemplateRepository questionTemplateRepository,SubSubQuestionRepository subSubQuestionRepository) {
+    public QuestionService(EncryptedPaperRepository encryptedPaperRepository, QuestionStructureRepository questionStructureRepository, SubQuestionRepository subQuestionRepository, SubSubQuestionRepository subSubQuestionRepository, QuestionTemplateRepository questionTemplateRepository) {
         this.encryptedPaperRepository = encryptedPaperRepository;
         this.questionStructureRepository = questionStructureRepository;
         this.subQuestionRepository = subQuestionRepository;
-        this.subSubQuestionRepository=subSubQuestionRepository;
+        this.subSubQuestionRepository = subSubQuestionRepository;
         this.questionTemplateRepository = questionTemplateRepository;
     }
 
